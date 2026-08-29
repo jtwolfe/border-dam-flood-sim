@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>China Border Dam-Break Simulator</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <h1>Border Dam-Break Simulator</h1>
+      <p>SRTM / Terrarium terrain · Bates 2010 inertial shallow-water · Rust compiled to WASM</p>
+    </div>
+    <div class="stats" id="stats">
+      <div><label>sim time</label><span id="tVal">—</span></div>
+      <div><label>max depth</label><span id="hVal">—</span></div>
+      <div><label>wet area</label><span id="aVal">—</span></div>
+      <div><label>volume</label><span id="vVal">—</span></div>
+      <div><label>border</label><span id="bVal">—</span></div>
+    </div>
+  </header>
+  <div id="layout">
+    <aside>
+      <h2>Scenario</h2>
+      <select id="scenario"></select>
+      <div id="info" class="card"></div>
+      <h2>1 · Terrain &amp; reservoir</h2>
+      <label class="row">Reservoir water surface
+        <input type="range" id="crestOff" min="5" max="280" value="60" />
+        <span id="crestOffVal">60 m above bed</span>
+      </label>
+      <label class="row">Released volume cap
+        <input type="range" id="vol" min="0.01" max="25" step="0.01" value="1" />
+        <span id="volVal">1.00 km³</span>
+      </label>
+      <div class="btns">
+        <button id="btnLoad">Load terrain</button>
+        <button id="btnFill" disabled>Fill reservoir</button>
+      </div>
+      <h2>2 · Breach</h2>
+      <label class="row">Integration speed
+        <input type="range" id="speed" min="1" max="40" value="10" />
+        <span id="speedVal">10 steps / frame</span>
+      </label>
+      <label class="row">View
+        <select id="viewMode">
+          <option value="live">Live water depth</option>
+          <option value="max">Max inundation</option>
+        </select>
+      </label>
+      <div class="btns">
+        <button id="btnBreach" disabled class="danger">Breach dam</button>
+        <button id="btnPause" disabled>Pause</button>
+        <button id="btnReset" disabled>Reset</button>
+      </div>
+      <h2>Legend</h2>
+      <div class="legend">
+        <div><i class="swatch hill"></i> Terrain hillshade (SRTM)</div>
+        <div><i class="swatch res"></i> Reservoir (pre-breach)</div>
+        <div><i class="swatch f1"></i> Flood 0.2–2 m</div>
+        <div><i class="swatch f2"></i> Flood 2–8 m</div>
+        <div><i class="swatch f3"></i> Flood 8–20 m</div>
+        <div><i class="swatch f4"></i> Flood &gt; 20 m</div>
+        <div><i class="swatch dam"></i> Dam cell</div>
+        <div><i class="swatch border"></i> International border</div>
+        <div><i class="swatch xing"></i> River crossing into neighbor</div>
+      </div>
+      <p class="fineprint">
+        2-D local-inertial shallow-water equations (Bates, Horritt &amp; Fewtrell 2010 / LISFLOOD-FP ACC)
+        run entirely in the browser. Screening model only — not an official inundation study.
+      </p>
+    </aside>
+    <main>
+      <div id="map"></div>
+    </main>
+  </div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
